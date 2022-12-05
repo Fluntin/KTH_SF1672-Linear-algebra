@@ -2,11 +2,11 @@ import numpy as np
 import random
 
 def get_data():
-    data_sample = "Poster - Results.txt"
+    data_sample = "Harry Potter.txt"
     text_data = open(data_sample, 'r', encoding="utf8").read()
     text_data = ''.join([i for i in text_data if not i.isdigit()]).replace("\n", " ").split(' ')  
     
-    to_change=['.',',','!','?',';','"',"'","“","”","(",")","-",":","`",' ',]
+    to_change=['.',',','!','?',';','"',"'","“","”","(",")","-",":","`",'|','—']
     log_change=dict()
     for element in to_change:
         index=list()
@@ -20,11 +20,13 @@ def get_data():
     next_index=1
     for key in log_change:
         for elment in log_change[key]:
-            text_data.insert(int(elment)+next_index, key)
+            #text_data.insert(int(elment)+next_index, key)
             next_index+=1
             
     text_data=list(map(str.lower,text_data))
-    #print(text_data)
+    text_data = list(filter(None, text_data))
+    print(text_data)
+            
 
     return(text_data)
 
@@ -133,18 +135,22 @@ def main():
     next_word=get_location(raw_text,set_text)
     
     A=initial_matrix(set_text,next_word)
-    x=np.array(get_initial_x(set_text))
     
-    #print(len(set_text))
-    #print(len(x))
+    while True:
+        print('Generate a sentance:')
+        s=input()
+        if s=='t':
+            x=np.array(get_initial_x(set_text))
     
-    for i in range (0,10):
-        x=np.matmul(A,x)
-        check=0
-        for j in range (0,len(x)):
-            if x[j][0]>=check:
-                check=x[j][0]
-                index=j     
-        print(set_text[index],end=" ")
+            for i in range (0,30):
+                x=np.matmul(A,x)
+                check=0
+                for j in range (0,len(x)):
+                    if x[j][0]>=check:
+                        check=x[j][0]
+                        index=j     
+                print(set_text[index],end=" ")
+        else:
+            break
     
 main()
